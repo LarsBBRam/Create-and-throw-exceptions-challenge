@@ -11,88 +11,124 @@ class Program
             ["0", "1", "2"],
         ];
 
-        string overallStatusMessage = "";
-
-        overallStatusMessage = Workflow1(userEnteredValues);
-
-        if (overallStatusMessage == "operating procedure complete")
+        try
         {
-            Console.WriteLine("'Workflow1' completed successfully");
+            Workflow1(userEnteredValues);
+            Console.WriteLine("Workflow1 completed successfully.");
         }
-        else
+        catch (DivideByZeroException ex)
         {
-            Console.WriteLine("An error occurred during 'Workflow1'.");
-            Console.WriteLine(overallStatusMessage);
+            Console.WriteLine("An error occurred during Workflow1.");
+            Console.WriteLine(ex.Message);
         }
 
-        static string Workflow1(string[][] userEnteredValues)
+        /* Before improvement:
+            string overallStatusMessage = "";
+
+            overallStatusMessage = Workflow1(userEnteredValues);
+
+            if (overallStatusMessage == "operating procedure complete")
+            {
+                Console.WriteLine("'Workflow1' completed successfully");
+            }
+            else
+            {
+                Console.WriteLine("An error occurred during 'Workflow1'.");
+                Console.WriteLine(overallStatusMessage);
+            }
+        */
+
+        static void Workflow1(string[][] userEnteredValues)
         {
-            string operationStatusMessage = "good";
-            string processStatusMessage = "";
+            // string operationStatusMessage = "good";
+            // string processStatusMessage = "";
 
             foreach (string[] userEntries in userEnteredValues)
             {
-                processStatusMessage = Process1(userEntries);
-
-                if (processStatusMessage == "process complete")
+                try
                 {
-                    Console.WriteLine("'Process1' completed successfully.");
+                    Process1(userEntries);
+                    Console.WriteLine("Process1 completed successfully.");
                     Console.WriteLine();
                 }
-                else
+                catch (FormatException ex)
                 {
-                    Console.WriteLine("'Process1' encountered an issue, process aborted.");
-                    Console.WriteLine(processStatusMessage);
+                    Console.WriteLine("Process1 encountered an issue, process aborted.");
+                    Console.WriteLine(ex.Message);
                     Console.WriteLine();
-                    operationStatusMessage = processStatusMessage;
-
-
                 }
+                //     processStatusMessage = Process1(userEntries);
+
+                //     if (processStatusMessage == "process complete")
+                //     {
+                //         Console.WriteLine("'Process1' completed successfully.");
+                //         Console.WriteLine();
+                //     }
+                //     else
+                //     {
+                //         Console.WriteLine("'Process1' encountered an issue, process aborted.");
+                //         Console.WriteLine(processStatusMessage);
+                //         Console.WriteLine();
+                //         operationStatusMessage = processStatusMessage;
+
+
+                //     }
+                // }
+                // if (operationStatusMessage == "good")
+                // {
+                //     operationStatusMessage = "operating procedure complete";
+                // }
+
+                // return operationStatusMessage;
+
             }
-            if (operationStatusMessage == "good")
+            static void Process1(String[] userEntries)
             {
-                operationStatusMessage = "operating procedure complete";
-            }
+                int valueEntered;
 
-            return operationStatusMessage;
 
-        }
-        static string Process1(String[] userEntries)
-        {
-            string processStatus = "clean";
-            string returnMessage = "";
-            int valueEntered;
+                // string processStatus = "clean";
+                // string returnMessage = "";
 
-            foreach (string userValue in userEntries)
-            {
-                bool integerFormat = int.TryParse(userValue, out valueEntered);
 
-                if (integerFormat == true)
+                foreach (string userValue in userEntries)
                 {
-                    if (valueEntered != 0)
+                    bool integerFormat = int.TryParse(userValue, out valueEntered);
+
+                    if (integerFormat == true)
                     {
-                        checked
+                        if (valueEntered != 0)
                         {
-                            int calculatedValue = 4 / valueEntered;
+                            checked
+                            {
+                                int calculatedValue = 4 / valueEntered;
+                            }
+                        }
+                        else
+                        {
+
+                            throw new DivideByZeroException("invalid data.");
+                            //             returnMessage = "Invalid data. User input values must be above 0";
+                            //             processStatus = "error";
                         }
                     }
                     else
                     {
-                        returnMessage = "Invalid data. User input values must be above 0";
-                        processStatus = "error";
+                        throw new FormatException("invalid data");
+                        //         returnMessage = "Invalid data. User input values must be valid";
+                        //         processStatus = "error";
+                        //     }
                     }
+                    // if (processStatus == "clean")
+                    // {
+                    //     returnMessage = "process complete";
                 }
-                else
-                {
-                    returnMessage = "Invalid data. User input values must be valid";
-                    processStatus = "error";
-                }
+                // return returnMessage;
             }
-            if (processStatus == "clean")
-            {
-                returnMessage = "process complete";
-            }
-            return returnMessage;
         }
+
+
+
+
     }
 }
